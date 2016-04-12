@@ -40,7 +40,7 @@ MD5生成的16进制长度是32位,SHA-256的更长,是64位.最后确定是选C
     <!--对资源hash和修改引用该资源的文件-->
     <plugin>
         <groupId>com.chaodongyue.maven</groupId>
-        <artifactId>hashresource-maven-plugin</artifactId><
+        <artifactId>hash-resource</artifactId><
         <version>1.0</version>
         <executions>
             <execution>
