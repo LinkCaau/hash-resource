@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.chaodongyue.maven</groupId>
-    <artifactId>hashresource-maven-plugin</artifactId>
+    <artifactId>hash-resource</artifactId>
     <packaging>maven-plugin</packaging>
     <version>1.0</version>
-    <name>hashresource-maven-plugin Maven Mojo</name>
+    <name>hash-resource Maven Mojo</name>
 
 
     <properties>
@@ -31,7 +31,6 @@
             <artifactId>yuicompressor</artifactId>
             <version>2.4.8</version>
         </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -41,7 +40,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
