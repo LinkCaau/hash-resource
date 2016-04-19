@@ -137,14 +137,14 @@ public class HashResourceMojo extends AbstractMojo {
 		return file.getCanonicalPath().replace(warSourceDirectory.getPath(), "").replace("\\", "/");
 	}
 
-	public String[] getIncludes() {
+	private String[] getIncludes() {
 		if (includes == null || includes.length < 1) {
 			return new String[]{"**/*.js", "**/*.css"};
 		}
 		return includes;
 	}
 
-	public String[] getIncludesHtml() {
+	private String[] getIncludesHtml() {
 		if (includesHtml == null || includesHtml.length < 1) {
 			return new String[]{"**/*.jsp", "**/*.html"};
 		}
@@ -158,7 +158,7 @@ public class HashResourceMojo extends AbstractMojo {
 		} else if (algorithm.equalsIgnoreCase("CRC32")) {
 			checksum = new CRC32();
 		} else {
-			throw new IllegalArgumentException("Algorithm value is " + algorithm);
+			throw new IllegalArgumentException("don't has algorithm :  " + algorithm);
 		}
 		return checksum;
 	}
