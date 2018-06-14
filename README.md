@@ -7,58 +7,45 @@ MD5生成的16进制长度是32位,SHA-256的更长,是64位.最后确定是选C
 
 理论上来讲，CRC64的碰撞概率大约是每18×10^18个CRC码出现一次。[这里](http://blog.csdn.net/yunhua_lee/article/details/42775039)有人测试过CRC32的碰撞概率,数据显示是1820W数据，冲突数量是38638个，还是比较可观。还有Adler32也可以选择,不过保守点还是选CRC32.
 
+### 原理
+拷贝warSourceDirectory (和maven-war-plugin的默认值一样是${basedir}/src/main/webapp)到 ${project.build.directory}/prepareWarSource 下,然后对js和css进行hash,把hash的值得追加到文件原名字后.
+
+修改所有页面引用资源的地址,把引用的文件名改为hash之后的文件名.war打包的时候将warSourceDirectory改为插件修改文件的目录就可以
+
+### 注意:
+> * 建议在服务器上build, 如果开发的时候build, 会导致项目启动时读取不到文件, 因为build之后目标文件会重命名
+> * 建议把第三方的包排除了,免得重复处理
+
 ### 使用要求 :
-> * Java 8
-> * 只支持绝对路径(正则问题)
-> * 不能包含jstl语法(正则问题)
+> * 支持相对路径,绝对路径
 
 ### 使用方法
 ```xml
 <plugins>
-    <!-- 先复制要处理的资源,必须放在第一 -->
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.7</version>
-        <executions>
-            <execution>
-                <phase>validate</phase>
-                <goals>
-                    <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                    <outputDirectory>${project.build.directory}/prepareWarSource</outputDirectory>
-                    <resources>
-                        <resource>
-                            <directory>${basedir}/webapp</directory>
-                        </resource>
-                    </resources>
-                </configuration>
-            </execution>
-        </executions>
-    </plugin>
     <!--对资源hash和修改引用该资源的文件-->
     <plugin>
         <groupId>com.chaodongyue.maven</groupId>
-        <artifactId>hash-resource</artifactId><
+        <artifactId>hash-resource</artifactId>
         <version>1.0</version>
         <executions>
             <execution>
-                <goals>
-                    <goal>hash</goal>
-                </goals>
+                <execution>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>hash</goal>
+                    </goals>
+                </execution>
                 <configuration>
-                    <warSourceDirectory>${project.build.directory}/prepareWarSource</warSourceDirectory>
-                    <includesHtml>
-                        <include>**/*.jsp</include>
-                        <include>**/*.html</include>
-                        <include>/WEB-INF/tags/*.tag</include>
-                    </includesHtml>
-                </configuration>
+                    <configuration>
+                        <excludeResource>
+                            <excludeResource>**/*.min.js</excludeResource><!-- 排除已经压缩了的js -->
+                            <excludeResource>**/*.min.css</excludeResource><!-- 排除已经压缩了的css -->
+                        </excludeResource>
+                    </configuration>
+            </configuration>
             </execution>
         </executions>
     </plugin>
-    <!-- 最后打成war包,必须放最后 -->
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
